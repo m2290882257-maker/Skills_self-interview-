@@ -1,0 +1,15 @@
+{
+  "experiences": [
+    {
+      "experience_id": "exp_mid_1",
+      "company": "Example Tech",
+      "role": "Backend Engineer",
+      "project": "stability optimization",
+      "actions": [
+        "stability optimization",
+        "queue tuning"
+      ],
+      "result": "无"
+    }
+  ]
+}

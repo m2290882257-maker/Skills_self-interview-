@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "role_specific_answer",
+  "type": "object",
+  "required": [
+    "question_type",
+    "explicit_test_points",
+    "hidden_evaluation_dimensions",
+    "answer_framework",
+    "recommended_answer",
+    "optional_experience_hooks",
+    "risk_notes",
+    "followup_questions"
+  ],
+  "properties": {
+    "question_type": {
+      "type": "string",
+      "enum": ["role_specific", "hybrid"]
+    },
+    "explicit_test_points": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hidden_evaluation_dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "explanation"],
+        "properties": {
+          "dimension": { "type": "string" },
+          "explanation": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "answer_framework": {
+      "type": "object",
+      "required": ["formula", "steps"],
+      "properties": {
+        "formula": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "explanation"],
+            "properties": {
+              "title": { "type": "string" },
+              "explanation": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "recommended_answer": { "type": "string" },
+    "optional_experience_hooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["experience_id", "usage"],
+        "properties": {
+          "experience_id": { "type": "string" },
+          "usage": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "risk_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "followup_questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

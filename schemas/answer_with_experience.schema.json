@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AnswerWithExperienceOutput",
+  "type": "object",
+  "required": [
+    "route_suggestion",
+    "direct_answer",
+    "coaching_answer",
+    "used_experience_ids",
+    "confidence",
+    "risk_flags",
+    "weak_spans",
+    "answer_suggestions"
+  ],
+  "properties": {
+    "route_suggestion": {
+      "type": "string",
+      "enum": ["answer_with_experience", "answer_role_specific_question", "hybrid"]
+    },
+    "direct_answer": { "type": "string", "minLength": 1 },
+    "coaching_answer": { "type": "string", "minLength": 1 },
+    "used_experience_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"]
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "weak_spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "reason"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "answer_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "type", "risk_level", "reason"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "type": {
+            "type": "string",
+            "enum": [
+              "framing",
+              "beautification",
+              "transition",
+              "admission",
+              "supplement_needed"
+            ]
+          },
+          "risk_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

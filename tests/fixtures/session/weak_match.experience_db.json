@@ -1,0 +1,15 @@
+{
+  "experiences": [
+    {
+      "experience_id": "exp_weak_1",
+      "company": "Design Studio",
+      "role": "UI Designer",
+      "project": "design system revamp",
+      "actions": [
+        "design tokens",
+        "ui review"
+      ],
+      "result": "无"
+    }
+  ]
+}

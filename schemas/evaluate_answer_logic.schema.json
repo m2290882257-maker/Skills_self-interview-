@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvaluateAnswerLogicOutput",
+  "type": "object",
+  "required": ["score", "confidence", "issues", "highlight_spans", "next_action"],
+  "properties": {
+    "score": {
+      "type": "object",
+      "required": ["relevance", "authenticity", "structure", "impact"],
+      "properties": {
+        "relevance": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "authenticity": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "structure": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "impact": { "type": "integer", "minimum": 1, "maximum": 5 }
+      },
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"]
+    },
+    "issues": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "highlight_spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "issue", "severity"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "issue": { "type": "string", "minLength": 1 },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "next_action": {
+      "type": "string",
+      "enum": ["accept", "ask_followup", "request_user_supplement"]
+    }
+  },
+  "additionalProperties": false
+}
