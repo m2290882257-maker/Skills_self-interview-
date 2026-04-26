@@ -1,0 +1,72 @@
+[
+  {
+    "case": "normal_match",
+    "output": {
+      "route_suggestion": "answer_with_experience",
+      "direct_answer": "我在订单服务重构中，把高峰期 p95 从 320ms 优化到 180ms。",
+      "coaching_answer": "使用 STAR 结构先说挑战再说动作和结果。",
+      "used_experience_ids": ["exp_001"],
+      "confidence": "HIGH",
+      "risk_flags": [],
+      "weak_spans": [],
+      "answer_suggestions": [
+        {
+          "text": "补一条跨团队协作细节",
+          "type": "framing",
+          "risk_level": "low",
+          "reason": "增强完整度"
+        }
+      ]
+    }
+  },
+  {
+    "case": "weak_match",
+    "output": {
+      "route_suggestion": "answer_with_experience",
+      "direct_answer": "我没有直接管理 20 人团队的经历，但承担过跨团队技术 owner。",
+      "coaching_answer": "先承认边界，再转向 ownership 证据。",
+      "used_experience_ids": ["exp_001"],
+      "confidence": "LOW",
+      "risk_flags": ["管理规模不匹配"],
+      "weak_spans": [
+        {
+          "text": "技术 owner",
+          "reason": "不是正式 people manager"
+        }
+      ],
+      "answer_suggestions": [
+        {
+          "text": "明确说明非正式管理",
+          "type": "admission",
+          "risk_level": "low",
+          "reason": "降低夸大风险"
+        }
+      ]
+    }
+  },
+  {
+    "case": "insufficient_info",
+    "output": {
+      "route_suggestion": "answer_role_specific_question",
+      "direct_answer": "我没有直接做过金融风控建模，但做过数据治理和指标体系。",
+      "coaching_answer": "采用承认不足 + 能力迁移 + 补充计划。",
+      "used_experience_ids": [],
+      "confidence": "LOW",
+      "risk_flags": ["缺少直接项目证据"],
+      "weak_spans": [
+        {
+          "text": "快速补齐方法",
+          "reason": "需避免过度承诺"
+        }
+      ],
+      "answer_suggestions": [
+        {
+          "text": "准备可迁移案例",
+          "type": "supplement_needed",
+          "risk_level": "medium",
+          "reason": "现有证据不足"
+        }
+      ]
+    }
+  }
+]

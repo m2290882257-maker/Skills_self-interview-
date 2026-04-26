@@ -1,0 +1,18 @@
+{
+  "experiences": [
+    {
+      "experience_id": "exp_high_1",
+      "company": "Example Tech",
+      "role": "Backend Engineer",
+      "project": "stability optimization",
+      "actions": [
+        "stability optimization",
+        "incident review"
+      ],
+      "metrics": {
+        "error_rate_percent": 0.2
+      },
+      "result": "无"
+    }
+  ]
+}

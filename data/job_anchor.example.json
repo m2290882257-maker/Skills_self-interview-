@@ -1,0 +1,6 @@
+{
+  "job_title": "Senior Backend Engineer",
+  "must_have": ["高并发系统设计", "可观测性", "跨团队协作"],
+  "nice_to_have": ["成本优化", "性能调优"],
+  "priority": ["系统设计", "稳定性", "业务影响"]
+}

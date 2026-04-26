@@ -1,0 +1,50 @@
+[
+  {
+    "case": "accept",
+    "output": {
+      "score": { "relevance": 5, "authenticity": 5, "structure": 4, "impact": 4 },
+      "confidence": "HIGH",
+      "issues": ["可补充冲突处理细节"],
+      "highlight_spans": [
+        {
+          "text": "我协调测试和产品一起完成灰度发布",
+          "issue": "可补充冲突处理路径",
+          "severity": "low"
+        }
+      ],
+      "next_action": "accept"
+    }
+  },
+  {
+    "case": "ask_followup",
+    "output": {
+      "score": { "relevance": 4, "authenticity": 4, "structure": 3, "impact": 2 },
+      "confidence": "MEDIUM",
+      "issues": ["缺少结果指标", "复盘不完整"],
+      "highlight_spans": [
+        {
+          "text": "效果不错",
+          "issue": "没有量化指标",
+          "severity": "medium"
+        }
+      ],
+      "next_action": "ask_followup"
+    }
+  },
+  {
+    "case": "request_user_supplement",
+    "output": {
+      "score": { "relevance": 3, "authenticity": 1, "structure": 3, "impact": 3 },
+      "confidence": "LOW",
+      "issues": ["出现经历库中不存在的事实"],
+      "highlight_spans": [
+        {
+          "text": "我带过 30 人团队并负责年度预算",
+          "issue": "experience_db 不存在该事实",
+          "severity": "high"
+        }
+      ],
+      "next_action": "request_user_supplement"
+    }
+  }
+]
