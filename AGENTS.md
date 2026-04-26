@@ -35,9 +35,11 @@
 ## 2. 项目结构
 
 ```
-Skills_self-interview-/
+<repo-root>/                   # 仓库根目录（Skills_self-interview-）
 ├── AGENTS.md                  # 本文件（开发规范权威文档）
 ├── README.md                  # 项目简介
+├── .gitignore                 # 排除 data/ 等本地数据目录
+├── requirements.txt           # Python 依赖
 │
 ├── agents/                    # Agent 实现
 │   ├── interviewer_agent.py   # 面试官 agent
@@ -46,6 +48,7 @@ Skills_self-interview-/
 ├── skills/                    # 所有 skill 模块
 │   ├── __init__.py
 │   ├── base_skill.py          # Skill 基类（接口定义）
+│   ├── data_manager.py        # 统一数据读写模块（所有 I/O 必须经过此模块）
 │   └── <skill_name>/          # 每个 skill 独立目录
 │       ├── __init__.py
 │       ├── skill.py           # Skill 实现
@@ -127,9 +130,9 @@ Skills_self-interview-/
 ### 数据文件规则
 
 - 所有 JSON 文件必须使用 **UTF-8** 编码，缩进为 **2 个空格**。
-- `data/` 目录下的文件**不得提交到版本控制**（已在 `.gitignore` 中排除），仅保留示例模板文件（`*.example.json`）。
+- `data/` 目录下的文件**不得提交到版本控制**（需在 `.gitignore` 中排除 `data/`），仅保留示例模板文件（`*.example.json`）。
 - `config/settings.json` 中**禁止**存储任何密钥、Token 或个人隐私信息。
-- 任何 skill 或 agent 读写数据时，必须通过统一的 `data_manager` 模块（`skills/data_manager.py`）操作，禁止直接硬编码文件路径。
+- 任何 skill 或 agent 读写数据时，必须通过统一的 `data_manager` 模块（`skills/data_manager.py`，见项目结构第 2 节）操作，禁止直接硬编码文件路径。
 
 ---
 
