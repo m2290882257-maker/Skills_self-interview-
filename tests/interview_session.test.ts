@@ -6,9 +6,11 @@ import test from "node:test";
 import {
   answerWithExperience,
   classifyQuestionType,
+  evaluateAnswerLogic,
   routeQuestionType,
   runInterviewSession
 } from "../orchestrator/interview_session.ts";
+import { answerRoleSpecificQuestion } from "../orchestrator/role_specific_question.ts";
 
 test("high match experience should accept with no followups", async () => {
   const result = await runInterviewSession({
@@ -106,7 +108,7 @@ test("answer_with_experience should lower confidence when chosen experience misa
 
 test("answer_with_experience should match Chinese question and resume chunks", () => {
   const out = answerWithExperience(
-    "请讲一个你做稳定性优化的真实案例",
+    "你做过哪些稳定性优化？",
     {
       experiences: [
         {
@@ -187,6 +189,53 @@ test("runInterviewSession role_specific should inherit optional_experience_hooks
   assert.equal(result.question_type, "role_specific");
   assert.ok(result.candidate_answer.used_experience_ids.includes("exp_perm_1"));
   assert.ok(["MEDIUM", "LOW"].includes(result.candidate_answer.confidence));
+});
+
+
+
+test("role_specific hooks should flow into used_experience_ids and avoid direct evidence-missing penalty", () => {
+  const question = "你会如何设计一个可审计的权限系统？";
+  const roleSpecific = answerRoleSpecificQuestion({
+    question,
+    job_anchor: { capability_focus: ["权限", "审计"] },
+    optional_experience_db: [
+      {
+        experience_id: "exp_perm_hook",
+        company: "X",
+        role: "Backend Engineer",
+        project: "权限系统改造",
+        actions: ["设计 RBAC", "补齐审计日志"]
+      }
+    ]
+  });
+
+  const usedExperienceIds = roleSpecific.optional_experience_hooks.map((hook) => hook.experience_id);
+  const candidateAnswer = {
+    route_suggestion: "answer_role_specific_question" as const,
+    direct_answer: roleSpecific.recommended_answer,
+    coaching_answer: roleSpecific.answer_framework.formula,
+    used_experience_ids: usedExperienceIds,
+    confidence: (usedExperienceIds.length > 0 ? "MEDIUM" : "LOW") as const,
+    risk_flags: roleSpecific.risk_notes,
+    weak_spans: [],
+    answer_suggestions: []
+  };
+
+  const evaluation = evaluateAnswerLogic(question, candidateAnswer, {
+    experiences: [
+      {
+        experience_id: "exp_perm_hook",
+        company: "X",
+        role: "Backend Engineer",
+        project: "权限系统改造",
+        actions: ["设计 RBAC", "补齐审计日志"]
+      }
+    ]
+  });
+
+  assert.ok(usedExperienceIds.includes("exp_perm_hook"));
+  assert.ok(!evaluation.issues.includes("与经历库直接匹配不足"));
+  assert.notEqual(evaluation.confidence, "LOW");
 });
 
 test("question_types routing should match resume_based / role_specific / hybrid", () => {
