@@ -1,0 +1,4 @@
+{
+  "must_have": ["backend stability"],
+  "nice_to_have": ["incident handling"]
+}

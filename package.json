@@ -1,0 +1,13 @@
+{
+  "name": "skills-self-interview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/acceptance/*.test.ts",
+    "test:acceptance": "node --experimental-strip-types --test tests/acceptance/*.test.ts",
+    "manual:mvp": "node --experimental-strip-types scripts/manual_mvp_test.ts",
+    "health:web": "node scripts/web_health_check.js",
+    "web:static": "python scripts/start_static_web_test.py",
+    "web:static:file": "python scripts/print_static_web_test_url.py"
+  }
+}

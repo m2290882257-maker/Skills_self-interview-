@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExtractResumeExperiencesItem",
+  "type": "object",
+  "required": ["module", "action", "scenario", "result", "source", "tags", "hash_key"],
+  "properties": {
+    "module": { "type": "string" },
+    "action": { "type": "string" },
+    "scenario": { "type": "string" },
+    "result": { "type": "string" },
+    "source": { "type": "string", "const": "resume" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hash_key": { "type": "string", "minLength": 64, "maxLength": 64 }
+  },
+  "additionalProperties": false
+}

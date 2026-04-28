@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Self-Interview 静态测试页</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f6f7fb; color: #1f2937; }
+      .container { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+      .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+      h1 { margin: 8px 0 16px; font-size: 24px; }
+      h2 { margin: 0 0 10px; font-size: 16px; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      textarea { width: 100%; min-height: 150px; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px; resize: vertical; box-sizing: border-box; }
+      button { border: 0; border-radius: 8px; background: #2563eb; color: #fff; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+      button.secondary { background: #4b5563; }
+      pre { background: #111827; color: #d1fae5; padding: 10px; border-radius: 8px; overflow: auto; min-height: 120px; }
+      .muted { color: #6b7280; font-size: 13px; }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; }
+      @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Self-Interview 纯静态 HTML 测试页</h1>
+
+      <section class="card">
+        <p class="muted">
+          用途：在 <strong>无法安装 Next 依赖</strong> 时，先验证输入-解析-展示-回答建议的交互流程。该页面不依赖后端服务，仅做本地浏览器内模拟。
+        </p>
+      </section>
+
+      <section class="card grid">
+        <div>
+          <h2>简历文本（resume）</h2>
+          <textarea id="resumeInput" placeholder="每行一条经历，例如：\n负责支付系统重构，P99 从 800ms 降到 280ms\n主导告警治理，误报下降 40%"></textarea>
+        </div>
+        <div>
+          <h2>JD 文本（job_description）</h2>
+          <textarea id="jdInput" placeholder="例如：\n负责高并发系统设计\n要求熟悉稳定性与可观测性\n需要跨团队协作"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>面经问题文本（interview_questions）</h2>
+        <textarea id="interviewInput" placeholder="例如：\n你做过哪些稳定性优化？\n如何在交付与质量之间做取舍？"></textarea>
+      </section>
+
+      <section class="card">
+        <div class="row">
+          <button id="parseBtn">1) 解析并生成三份结构</button>
+          <button id="answerBtn" class="secondary">2) 生成模拟回答分层输出</button>
+        </div>
+      </section>
+
+      <section class="card grid">
+        <div>
+          <h2>experience_db</h2>
+          <pre id="experienceOut">{}</pre>
+        </div>
+        <div>
+          <h2>job_anchor</h2>
+          <pre id="anchorOut">{}</pre>
+        </div>
+      </section>
+
+      <section class="card grid">
+        <div>
+          <h2>question_queue</h2>
+          <pre id="queueOut">{}</pre>
+        </div>
+        <div>
+          <h2>candidate_output（分层）</h2>
+          <pre id="answerOut">{}</pre>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // 输入：原始文本；输出：去空行的文本数组。
+      function toNonEmptyLines(text) {
+        return String(text || '')
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
+      }
+
+      // 输入：简历文本；输出：最小 experience_db 结构。
+      function buildExperienceDb(resumeText) {
+        const lines = toNonEmptyLines(resumeText);
+        const experiences = lines.map((line, idx) => ({
+          id: `exp_${idx + 1}`,
+          summary: line,
+          source: 'resume'
+        }));
+
+        return {
+          experiences,
+          count: experiences.length
+        };
+      }
+
+      // 输入：JD 文本；输出：最小 job_anchor 结构。
+      function buildJobAnchor(jdText) {
+        const text = String(jdText || '');
+        const keywords = ['高并发', '稳定性', '可观测性', '协作', '架构', '性能'];
+        const hits = keywords.filter((k) => text.includes(k));
+
+        return {
+          role_focus: hits.length ? hits : ['通用工程能力'],
+          raw_length: text.length
+        };
+      }
+
+      // 输入：面经文本；输出：最小 question_queue 结构。
+      function buildQuestionQueue(interviewText) {
+        const chunks = String(interviewText || '')
+          .split(/[\n？?]/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        const questions = chunks.map((q, idx) => ({
+          id: `q_${idx + 1}`,
+          question: q.endsWith('？') || q.endsWith('?') ? q : `${q}？`
+        }));
+
+        return {
+          questions,
+          count: questions.length
+        };
+      }
+
+      // 输入：三份结构；输出：分层回答（fact/suggestions/risk/missing）。
+      function buildLayeredAnswer(experienceDb, jobAnchor, questionQueue) {
+        const firstQuestion = questionQueue.questions[0]?.question || '请先补充一个问题';
+        const firstExp = experienceDb.experiences[0]?.summary || '';
+
+        return {
+          fact_answer: firstExp
+            ? `针对问题“${firstQuestion}”，我在过往经历中做过：${firstExp}`
+            : '当前没有足够经历信息，请先补充简历内容。',
+          highlight_suggestions: [
+            '先用 STAR 结构回答（场景-任务-行动-结果）。',
+            '补充量化指标（如时延、稳定性、成本变化）。',
+            `尽量贴合岗位关键词：${jobAnchor.role_focus.join('、')}`
+          ],
+          risk_flags: [
+            !firstExp ? '缺少可核验经历，存在空泛风险。' : '注意避免把团队成果全部归因于个人。'
+          ],
+          missing_info: [
+            questionQueue.count === 0 ? '缺少面试问题文本。' : null,
+            experienceDb.count === 0 ? '缺少简历经历文本。' : null
+          ].filter(Boolean)
+        };
+      }
+
+      const state = {
+        experienceDb: { experiences: [], count: 0 },
+        jobAnchor: { role_focus: ['通用工程能力'], raw_length: 0 },
+        questionQueue: { questions: [], count: 0 }
+      };
+
+      const el = {
+        resumeInput: document.getElementById('resumeInput'),
+        jdInput: document.getElementById('jdInput'),
+        interviewInput: document.getElementById('interviewInput'),
+        experienceOut: document.getElementById('experienceOut'),
+        anchorOut: document.getElementById('anchorOut'),
+        queueOut: document.getElementById('queueOut'),
+        answerOut: document.getElementById('answerOut'),
+        parseBtn: document.getElementById('parseBtn'),
+        answerBtn: document.getElementById('answerBtn')
+      };
+
+      function renderJson(target, value) {
+        target.textContent = JSON.stringify(value, null, 2);
+      }
+
+      el.parseBtn.addEventListener('click', () => {
+        state.experienceDb = buildExperienceDb(el.resumeInput.value);
+        state.jobAnchor = buildJobAnchor(el.jdInput.value);
+        state.questionQueue = buildQuestionQueue(el.interviewInput.value);
+
+        renderJson(el.experienceOut, state.experienceDb);
+        renderJson(el.anchorOut, state.jobAnchor);
+        renderJson(el.queueOut, state.questionQueue);
+      });
+
+      el.answerBtn.addEventListener('click', () => {
+        const output = buildLayeredAnswer(state.experienceDb, state.jobAnchor, state.questionQueue);
+        renderJson(el.answerOut, output);
+      });
+
+      // 初始化默认样例，便于直接点击验证。
+      el.resumeInput.value = '负责订单服务重构，P99 从 760ms 优化到 300ms\n主导告警治理，误报下降 40%';
+      el.jdInput.value = '负责高并发系统设计，要求稳定性与跨团队协作能力';
+      el.interviewInput.value = '你做过哪些稳定性优化？\n如何平衡交付速度和质量？';
+      el.parseBtn.click();
+    </script>
+  </body>
+</html>

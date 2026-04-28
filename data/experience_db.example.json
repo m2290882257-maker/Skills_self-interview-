@@ -1,0 +1,24 @@
+{
+  "candidate_id": "example_user",
+  "experiences": [
+    {
+      "experience_id": "exp_001",
+      "company": "Example Tech",
+      "role": "Backend Engineer",
+      "period": {
+        "start": "2023-01",
+        "end": "2025-03"
+      },
+      "project": "Order Service Refactor",
+      "actions": [
+        "拆分单体服务",
+        "引入异步任务队列"
+      ],
+      "metrics": {
+        "latency_p95_ms": 180,
+        "error_rate_percent": 0.3
+      },
+      "result": "无"
+    }
+  ]
+}

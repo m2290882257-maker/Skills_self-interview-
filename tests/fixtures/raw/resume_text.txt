@@ -1,0 +1,12 @@
+公司: Example Tech
+岗位: Backend Engineer
+时间: 2022-01 ~ 2024-12
+项目: stability optimization
+行动: 优化告警链路, 重构重试策略
+结果: 错误率下降到0.2%
+
+公司: Startup X
+岗位: Engineer
+时间: 2020-01 ~ 2021-12
+项目: internal tool
+行动: 搭建脚手架

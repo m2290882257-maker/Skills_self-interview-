@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterviewAnswer",
+  "type": "object",
+  "required": ["fact_answer", "highlight_suggestions", "risk_flags", "missing_info"],
+  "properties": {
+    "fact_answer": { "type": "string" },
+    "highlight_suggestions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "missing_info": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,69 @@
+[
+  {
+    "case": "weak_span_priority",
+    "input": {
+      "question": "你是怎么提升系统稳定性的？",
+      "answer": "我主要做了重构，效果不错。",
+      "weak_spans": [
+        { "text": "效果不错", "reason": "缺少可验证数据" }
+      ],
+      "job_anchor": { "must_have": ["稳定性"] }
+    },
+    "output": {
+      "followups": [
+        {
+          "question": "你说‘效果不错’，具体是哪些指标在什么时间窗口内改善了？",
+          "intent": "验证可量化结果",
+          "pressure_level": "high",
+          "expected_signal": "前后指标与采样口径"
+        },
+        {
+          "question": "这次重构中你主导的关键取舍是什么？",
+          "intent": "验证个人贡献和决策",
+          "pressure_level": "medium",
+          "expected_signal": "能描述决策边界与原因"
+        }
+      ]
+    }
+  },
+  {
+    "case": "no_weak_span_job_anchor_driven",
+    "input": {
+      "question": "讲一次跨团队推进经历。",
+      "answer": "我协调过后端、测试、产品一起推进上线。",
+      "weak_spans": [],
+      "job_anchor": { "must_have": ["冲突管理", "协作"] }
+    },
+    "output": {
+      "followups": [
+        {
+          "question": "当时最大的协作冲突是什么，你如何推动达成一致？",
+          "intent": "验证冲突处理能力",
+          "pressure_level": "medium",
+          "expected_signal": "冲突背景、动作、结果"
+        }
+      ]
+    }
+  },
+  {
+    "case": "data_and_failure_probe",
+    "input": {
+      "question": "你做过性能优化吗？",
+      "answer": "做过，效果挺好的。",
+      "weak_spans": [
+        { "text": "效果挺好的", "reason": "缺少失败与数据细节" }
+      ],
+      "job_anchor": { "must_have": ["性能调优", "复盘"] }
+    },
+    "output": {
+      "followups": [
+        {
+          "question": "这次优化有没有失败过的尝试？当时怎么复盘并调整方案？",
+          "intent": "验证失败复盘深度",
+          "pressure_level": "high",
+          "expected_signal": "失败原因、调整动作、结果变化"
+        }
+      ]
+    }
+  }
+]
