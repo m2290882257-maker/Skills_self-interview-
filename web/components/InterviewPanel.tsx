@@ -42,14 +42,18 @@ export default function InterviewPanel({ data, pickedQuestion }: Props) {
       optional_experience_db: experienceDb.experiences
     });
 
+    const usedExperienceIds = roleSpecific.optional_experience_hooks.map(
+      (hook: { experience_id: string }) => hook.experience_id
+    );
+
     const candidateAnswer =
       questionType === "role_specific"
         ? {
             route_suggestion: "answer_role_specific_question" as const,
             direct_answer: roleSpecific.recommended_answer,
             coaching_answer: roleSpecific.answer_framework.formula,
-            used_experience_ids: [],
-            confidence: "MEDIUM" as const,
+            used_experience_ids: usedExperienceIds,
+            confidence: (usedExperienceIds.length > 0 ? "MEDIUM" : "LOW") as const,
             risk_flags: roleSpecific.risk_notes,
             weak_spans: [],
             answer_suggestions: []

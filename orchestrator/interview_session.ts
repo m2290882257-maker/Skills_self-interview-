@@ -94,12 +94,35 @@ export function routeQuestionType(questionType: QuestionType): string[] {
   return ["answer_role_specific_question", "answer_with_experience"];
 }
 
-const tokenize = (text: string): string[] =>
-  text
+const tokenize = (text: string): string[] => {
+  const normalized = text
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .split(/\s+/)
-    .filter((x) => x.length > 1);
+    .trim();
+
+  const parts = normalized.split(/\s+/).filter(Boolean);
+  const hanChunks = normalized.match(/[\p{Script=Han}]{2,}/gu) ?? [];
+  const hanBigrams = hanChunks.flatMap((chunk) =>
+    chunk.length < 2
+      ? [chunk]
+      : Array.from({ length: chunk.length - 1 }, (_, i) => chunk.slice(i, i + 2))
+  );
+
+  const intlSegments: string[] = [];
+  try {
+    if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+      const segmenter = new Intl.Segmenter("zh", { granularity: "word" });
+      for (const seg of segmenter.segment(text.toLowerCase())) {
+        const token = seg.segment.replace(/[^\p{L}\p{N}]/gu, "").trim();
+        if (token.length > 1) intlSegments.push(token);
+      }
+    }
+  } catch {
+    // 环境不支持 Intl.Segmenter 时忽略，回退到 Han chunk + 2gram。
+  }
+
+  return [...new Set([...parts.filter((x) => x.length > 1), ...hanChunks, ...hanBigrams, ...intlSegments])];
+};
 
 const getCapabilityFocus = (jobAnchor: JobAnchor): string[] =>
   jobAnchor.capability_focus && jobAnchor.capability_focus.length > 0
@@ -341,24 +364,19 @@ export async function runInterviewSession(input: InterviewSessionInput): Promise
     }))
   });
 
+  const usedExperienceIds = roleSpecificAnswer.optional_experience_hooks.map((hook) => hook.experience_id);
+
   const candidate_answer =
     questionType === "role_specific"
       ? {
           route_suggestion: "answer_role_specific_question",
           direct_answer: roleSpecificAnswer.recommended_answer,
           coaching_answer: roleSpecificAnswer.answer_framework.formula,
-          used_experience_ids: [],
-          confidence: "MEDIUM" as const,
+          used_experience_ids: usedExperienceIds,
+          confidence: (usedExperienceIds.length > 0 ? "MEDIUM" : "LOW") as const,
           risk_flags: roleSpecificAnswer.risk_notes,
           weak_spans: [],
-          answer_suggestions: [
-            {
-              text: "若有相关项目，可补 1 条真实落地细节提升说服力。",
-              type: "supplement_needed" as const,
-              risk_level: "low" as const,
-              reason: "当前答案以岗位通用方法为主"
-            }
-          ]
+          answer_suggestions: []
         }
       : questionType === "hybrid"
         ? {
