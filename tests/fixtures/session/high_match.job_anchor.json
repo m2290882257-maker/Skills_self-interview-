@@ -1,0 +1,4 @@
+{
+  "must_have": ["stability"],
+  "nice_to_have": ["observability"]
+}

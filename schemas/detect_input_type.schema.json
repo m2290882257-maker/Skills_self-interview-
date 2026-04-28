@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DetectInputTypeOutput",
+  "type": "object",
+  "required": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["jd", "interview_questions", "mixed"]
+    }
+  },
+  "additionalProperties": false
+}

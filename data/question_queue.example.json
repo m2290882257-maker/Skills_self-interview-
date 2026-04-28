@@ -1,0 +1,18 @@
+{
+  "questions": [
+    {
+      "question_id": "q_001",
+      "text": "讲一个你主导优化系统稳定性的例子。",
+      "tags": [
+        "stability",
+        "ownership"
+      ],
+      "difficulty": "medium",
+      "followup_focus": [
+        "指标前后变化",
+        "关键取舍"
+      ],
+      "confirmed": false
+    }
+  ]
+}

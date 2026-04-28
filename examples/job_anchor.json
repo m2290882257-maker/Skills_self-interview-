@@ -1,0 +1,4 @@
+{
+  "must_have": ["stability", "ownership", "cross-team collaboration"],
+  "nice_to_have": ["incident response", "performance tuning"]
+}

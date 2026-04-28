@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExtractJobAnchorFromJdOutput",
+  "type": "object",
+  "required": ["job_tags", "target_role", "capability_focus", "hidden_requirements", "answer_style"],
+  "properties": {
+    "job_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "target_role": { "type": "string" },
+    "capability_focus": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hidden_requirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "answer_style": { "type": "string" }
+  },
+  "additionalProperties": false
+}

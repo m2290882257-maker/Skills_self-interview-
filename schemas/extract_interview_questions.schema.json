@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExtractInterviewQuestionItem",
+  "type": "object",
+  "required": ["raw_question", "normalized_question", "category", "confirmed", "priority"],
+  "properties": {
+    "raw_question": { "type": "string" },
+    "normalized_question": { "type": "string" },
+    "category": { "type": "string" },
+    "confirmed": { "type": "boolean", "const": false },
+    "priority": { "type": "string", "enum": ["P0", "P1", "P2"] }
+  },
+  "additionalProperties": false
+}
